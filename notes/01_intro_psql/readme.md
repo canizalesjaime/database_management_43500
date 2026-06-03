@@ -44,6 +44,7 @@ psql commands in docker:
 * ```service postgresql restart```
 * ```cd test_db/postgresql``` (bash)
 * ```export PGUSER=postgres``` (bash)
+* if windows ```sed -i 's/\r$//' load_employees_db.sh``` else: skip
 * ```bash load_employees_db.sh``` (bash)
 * use psql by running: ```psql -U postgres```
 

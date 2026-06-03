@@ -1,5 +1,5 @@
 ## Class 2 
-clauses: conditionals, functions, agregate functions, temporary column creation, data types
+clauses: functions, agregate functions, temporary column creation
 
 ## Class 3
 clauses: DISTINCT, GROUP BY, HAVING, ORDER BY
