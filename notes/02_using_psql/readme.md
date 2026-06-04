@@ -110,27 +110,92 @@ Output:
 
 # Character Data Types
 
-Text columns store words and strings.
+In PostgreSQL, character (text) data types are used to store strings such as names, emails, or descriptions. The main types are:
 
-Example:
-- `first_name`
+- `CHAR(n)`
+- `VARCHAR(n)`
+- `TEXT`
 
-## Query Example
+Each type behaves slightly differently in how it stores and limits text.
+
+---
+
+## CHAR(n) — Fixed-Length Strings
+
+`CHAR(n)` stores strings with a fixed length.
+
+- If the text is shorter than `n`, PostgreSQL pads it with spaces.
+- Best used when values always have the same length (rare in modern databases).
+
+Example column:
+- country codes like `"US"`, `"CA"`
+
+### Query Example
+
+```sql
+SELECT country_code
+FROM customers;
+```
+
+---
+
+## VARCHAR(n) — Variable-Length Strings (with limit)
+
+`VARCHAR(n)` stores variable-length text but with a maximum limit of `n` characters.
+
+- Efficient for most real-world text fields
+- Commonly used for names, emails, usernames
+
+Example column:
+- `first_name VARCHAR(50)`
+
+### Query Example
 
 ```sql
 SELECT first_name
 FROM employees;
 ```
 
-Output:
+---
 
-| first_name |
-|---|
-| Alice |
-| Bob |
-| Carol |
+## TEXT — Unlimited Length Strings
+
+`TEXT` stores strings of any length (practically unlimited).
+
+- No fixed maximum size
+- Best for long descriptions, comments, or free-form text
+
+Example column:
+- `description TEXT`
+
+### Query Example
+
+```sql
+SELECT description
+FROM products;
+```
 
 ---
+
+## Comparing Character Types
+
+| Type | Length Limit | Best Use Case |
+|------|-------------|---------------|
+| CHAR(n) | Fixed length | Codes (rare use) |
+| VARCHAR(n) | Up to n characters | Names, emails |
+| TEXT | No practical limit | Long text, descriptions |
+
+---
+
+## Example: Reading All Character Types Together
+
+```sql
+SELECT first_name, email, description
+FROM users;
+```
+
+This shows how different character types are read the same way in queries — the difference is in how they are stored, not how they are selected.
+```
 
 # Boolean Data Types
 
