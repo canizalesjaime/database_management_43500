@@ -1,7 +1,6 @@
 ## n = current class
 
 ## Class n+1
-agregate functions: sum, avg, min, max, count, mix with case
 list and IN
 clauses: DISTINCT, GROUP BY, HAVING, ORDER BY 
 
