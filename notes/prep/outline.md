@@ -1,13 +1,9 @@
 ## n = current class
 
 ## Class n+1
-list and IN
-clauses: DISTINCT, GROUP BY, HAVING, ORDER BY 
-
-## Class n+2
 clauses: JOINS, UNIONS 
 
-## Class n+3
+## Class n+2
 subqueries, cte
 
 
