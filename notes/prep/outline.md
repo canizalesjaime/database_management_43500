@@ -1,7 +1,7 @@
 ## n = current class
 
 ## Class n+1
-clauses: JOINS, UNIONS 
+clauses: JOINS 
 
 ## Class n+2
 subqueries, cte
