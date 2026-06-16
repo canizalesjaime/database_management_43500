@@ -1,7 +1,7 @@
 ## n = current class
 
 ## Class n+1
-subqueries, cte, Using psql with SQL Scripts
+Using psql with SQL Scripts
 
 
 ## Part 2

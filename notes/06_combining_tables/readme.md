@@ -1,4 +1,4 @@
-# UNION in PostgreSQL Using the Employees Database
+# UNION
 
 `UNION` combines the results of multiple `SELECT` statements into one result set.
 Think of stacking tables on top of each other.

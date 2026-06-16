@@ -1,20 +1,12 @@
-# PostgreSQL (`psql`) Lecture — Read Operations with the Employees Database
+# Intro grouping
 
-We focus only on SQL read/query operations involving:
+We focus only on SQL read/query operations involving in this lecture:
 
 - `IN`
 - `DISTINCT`
 - `GROUP BY`
 - `HAVING`
 - `ORDER BY`
-
-The main tables used are:
-
-| Table | Purpose |
-|---|---|
-| `employees` | Employee information |
-| `dept_emp` | Employee-to-department assignments |
-| `departments` | Department names |
 
 ---
 
