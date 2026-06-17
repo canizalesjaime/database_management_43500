@@ -181,8 +181,8 @@ emp_no, first_name, last_name,
 (SELECT MAX(salary) FROM salaries WHERE employees.emp_no = salaries.emp_no) AS max_salary
 FROM employees;
 ```
-
 This query computes the max salary for each employees in the subquery.
+
 ---
 
 # 4. EXISTS subqueries
@@ -361,16 +361,6 @@ WITH average_salaries AS (
 )
 SELECT *
 FROM average_salaries;
-```
-
----
-
-# Mental model
-
-CTE =
-
-```text
-temporary named result set
 ```
 
 ---
