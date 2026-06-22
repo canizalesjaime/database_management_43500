@@ -20,11 +20,3 @@ CREATE TABLE my_table(
     col3 TEXT
 );
 \COPY my_table FROM '/path/to/file.csv' WITH CSV HEADER;
-
-
-/* methods to run a .sql file:
-1. psql -U username -d database_name -f file.sql
-2. \i /path/to/file.sql
-3. psql -U username -d database_name < file.sql
-4. \! to interact with bash shell
-*/

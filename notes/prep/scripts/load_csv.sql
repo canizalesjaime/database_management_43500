@@ -5,6 +5,6 @@ CREATE TABLE users (
 );
 
 
-\copy users FROM '../data/users.csv' WITH (FORMAT csv, HEADER true)
+\copy users FROM './users.csv' WITH (FORMAT csv, HEADER true)
 
 #\i ./script1.sql
