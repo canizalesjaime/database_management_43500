@@ -207,7 +207,7 @@ Adds a row.
 
 ---
 
-# Exporting Data to CSV
+# Exporting Data to CSV (psql table -> csv file)
 
 A CSV file looks like:
 
@@ -318,7 +318,7 @@ CREATE TABLE employees (
 
 ---
 
-## Import the CSV
+## Import the CSV (csv file -> psql table)
 
 ```sql
 \COPY employees

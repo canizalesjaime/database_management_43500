@@ -11,7 +11,7 @@
 
 
 
-# homework 2(prep)
+# homework 2(prep) due: june 30th?
 1. Create a database of your choosing(e.g. some business, airports, sneaker sales, housing, enviornmental
 sciences, etc. ).
 2. Create tables for your database(at least 5) and find data online(or create your own data) to fill your
