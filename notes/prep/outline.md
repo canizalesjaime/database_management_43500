@@ -1,9 +1,4 @@
-## 
-NOW: assign hw2, prepare lecture for today, high level idea of what needs to get done this week
-
 ## Part 2 (Design a database for each)
-* create, update and delete queries
-* Using psql with SQL Scripts
 * normalization of database
 * er diagrams
 * show how to connect database to frontend(include)
@@ -17,7 +12,7 @@ NOW: assign hw2, prepare lecture for today, high level idea of what needs to get
 
 
 # homework 2(prep)
-Create a database of your choosing(e.g. some business, airports, sneaker sales, housing, enviornmental
+1. Create a database of your choosing(e.g. some business, airports, sneaker sales, housing, enviornmental
 sciences, etc. ).
 2. Create tables for your database(at least 5) and find data online(or create your own data) to fill your
 tables. Each table should have at least 100 rows. Submit an image for the query SELECT * FROM <table name>

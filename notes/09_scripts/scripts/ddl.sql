@@ -1,11 +1,8 @@
-CREATE TABLE departments (
-dept_no CHAR(4) NOT NULL,
-dept_name VARCHAR(40) NOT NULL,
-PRIMARY KEY (dept_no)
-);
+CREATE DATABASE employees2;
 
+\c employees2
 
-CREATE TABLE public.employees
+CREATE TABLE employees
 (
 emp_no integer NOT NULL,
 birth_date date NOT NULL,
@@ -16,6 +13,12 @@ hire_date date NOT NULL,
 PRIMARY KEY (emp_no)
 );
 
+
+CREATE TABLE departments (
+dept_no CHAR(4) NOT NULL,
+dept_name VARCHAR(40) NOT NULL,
+PRIMARY KEY (dept_no)
+);
 
 -- DROP TABLE departments;
 DROP TABLE IF EXISTS departments;

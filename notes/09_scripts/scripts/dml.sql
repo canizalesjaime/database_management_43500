@@ -26,7 +26,7 @@ UPDATE departments SET department_no = 'd011', dept_name = 'Test Department' WHE
 
 
 -- DELETE: deletes all rows (same as TRUNCATE)
-DELETE FROM departments;
+-- DELETE FROM departments;
 
 
 -- DELETE: specific rows based on WHERE criteria:
