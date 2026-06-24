@@ -1,8 +1,3 @@
-* draw.io
-* erdplus
-* pgadmin erd
-* lucidchart.io
-
 # Database Normalization
 
 Before we learn **how** to normalize a database, we need to understand **why** normalization exists.
