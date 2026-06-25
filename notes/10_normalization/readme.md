@@ -504,7 +504,13 @@ Now nationality is stored once.
 
 # Multivalued Dependency
 
-A multivalued dependency occurs when two independent attributes both depend on the same key.
+A multivalued dependency occurs when a key is associated with multiple independent sets of values.
+
+A common way to recognize this is:
+
+> The same key has two or more independent one-to-many relationships.
+
+Unlike a functional dependency, where a key determines exactly one value, a multivalued dependency means a key determines a set of values.
 
 ---
 
@@ -513,36 +519,54 @@ A multivalued dependency occurs when two independent attributes both depend on t
 Suppose we have:
 
 | BikeModel | ManufacturingYear | Color |
-|------------|------------------|--------|
+|-----------|-------------------|--------|
 | MountainX | 2024 | Red |
 | MountainX | 2024 | Blue |
 | MountainX | 2025 | Red |
 | MountainX | 2025 | Blue |
 
----
-
-### Dependencies
+For the bike model MountainX:
 
 ```text
-BikeModel → ManufacturingYear
-BikeModel → Color
+ManufacturingYears = {2024, 2025}
+
+Colors = {Red, Blue}
 ```
 
 The years and colors are independent.
 
-A color does not determine a year.
+Knowing a color does not tell us the year.
 
-A year does not determine a color.
+Knowing a year does not tell us the color.
 
-Yet both depend on BikeModel.
+The bike model has:
 
-This is a multivalued dependency.
+- a set of manufacturing years
+- a set of colors
+
+These are two independent one-to-many relationships.
 
 ---
 
-## Problem
+## Dependencies
 
-The table produces unnecessary combinations:
+More precisely:
+
+```text
+BikeModel ↠ ManufacturingYear
+
+BikeModel ↠ Color
+```
+
+The double arrow (↠) indicates a multivalued dependency.
+
+It means a bike model can have multiple years and multiple colors.
+
+---
+
+## Why Is This a Problem?
+
+The table stores every combination of years and colors:
 
 ```text
 2024 + Red
@@ -551,29 +575,91 @@ The table produces unnecessary combinations:
 2025 + Blue
 ```
 
-The amount of duplicated data grows rapidly.
+This is a Cartesian product of two independent sets.
+
+As additional years or colors are added, the number of rows grows rapidly even though no new information is being stored.
+
+For example, adding:
+
+```text
+2026
+```
+
+requires:
+
+```text
+2026 + Red
+2026 + Blue
+```
+
+Adding:
+
+```text
+Green
+```
+
+requires:
+
+```text
+2024 + Green
+2025 + Green
+2026 + Green
+```
+
+This creates redundancy and update anomalies.
 
 ---
 
 ## Solution
 
-Split into separate tables:
+Store each independent relationship separately.
+
+### BikeYears
+
+| BikeModel | Year |
+|-----------|------|
+| MountainX | 2024 |
+| MountainX | 2025 |
+
+### BikeColors
+
+| BikeModel | Color |
+|-----------|--------|
+| MountainX | Red |
+| MountainX | Blue |
+
+Now:
 
 ```text
-BikeYears
-------------------
-BikeModel
-Year
-
-BikeColors
-------------------
-BikeModel
-Color
+BikeModel ↠ ManufacturingYear
 ```
 
-The multivalued dependency is eliminated.
+is stored independently from:
+
+```text
+BikeModel ↠ Color
+```
+
+No unnecessary combinations are stored.
+
+The multivalued dependency has been eliminated, and the database satisfies Fourth Normal Form (4NF).
 
 ---
+
+## Key Idea
+
+A table does not violate 4NF simply because multiple columns depend on the same key.
+
+For example:
+
+```text
+EmployeeID → Name
+EmployeeID → HireDate
+```
+
+is not a multivalued dependency because Name and HireDate are single-valued facts.
+
+A 4NF violation occurs when the key has multiple independent one-to-many relationships, causing the database to store every combination of those independent sets.
 
 # The Normal Forms
 
@@ -726,263 +812,171 @@ Both attributes independently depend on BikeModel.
 Separate the independent attributes into their own tables.
 
 
-# Example: Taking a Database from Unnormalized Form to 4NF
 
-Let's build a complete example that demonstrates every normalization step.
+## A generalized algorithm for each normalization step:
+1. Identify the dependency violating the current normal form.
 
-Suppose a video game store keeps the following table:
+2. Find the determinant:
+   A → B
 
-| SaleID | CustomerName | CustomerPhone | GameTitle | Publisher | Platform | StoreLocation |
-|---------|-------------|----------------|-----------|------------|----------|---------------|
-| 1 | Alice | 555-1111 | Minecraft | Mojang | PC | NYC |
-| 1 | Alice | 555-1111 | Minecraft | Mojang | Xbox | NYC |
-| 1 | Alice | 555-1111 | Terraria | Re-Logic | PC | NYC |
-| 2 | Bob | 555-2222 | Minecraft | Mojang | PC | Boston |
+3. Create a new table whose primary key is A.
 
-Problems already visible:
+4. Move B (and any attributes that depend on A) into that table.
 
-- Customer information is duplicated.
-- Publisher information is duplicated.
-- Multiple platforms create repeated rows.
-- Different facts are mixed together.
+5. Leave behind a reference to A in the original table.
 
----
+6. Repeat until no violations remain.
+# Example: Normalizing a Video Game Sales Database
 
-# Step 0: Unnormalized Form (UNF)
+## Step 0: Unnormalized Form (UNF)
 
-Suppose the store originally stored platforms as a list:
+Suppose a video game store stores sales like this:
 
-| SaleID | CustomerName | GameTitle | Platforms |
-|---------|-------------|-----------|------------|
-| 1 | Alice | Minecraft | PC, Xbox |
-| 2 | Bob | Terraria | PC |
+| SaleID | CustomerName | CustomerPhone | Games Purchased |
+|---------|-------------|---------------|-----------------|
+| 1 | Alice | 555-1111 | Minecraft (Mojang)(PC, Xbox), Terraria (Re-logic)(PC) |
+| 2 | Bob | 555-2222 | Minecraft (Mojang)(PC) |
 
-This violates 1NF.
+Problems:
 
-Why?
+- Multiple games are stored in one field.
+- Multiple platforms are stored in one field.
+- Values are not atomic.
 
-```text
-Platforms = PC, Xbox
-```
-
-contains multiple values.
-
-The value is not atomic.
+This violates First Normal Form (1NF).
 
 ---
 
-# Step 1: Convert to First Normal Form (1NF)
+## Step 1: Convert to First Normal Form (1NF)
 
-## Rule
-
-All values must be atomic.
-
----
-
-Split the platform list:
-
-| SaleID | CustomerName | GameTitle | Platform |
-|---------|-------------|-----------|----------|
-| 1 | Alice | Minecraft | PC |
-| 1 | Alice | Minecraft | Xbox |
-| 2 | Bob | Terraria | PC |
-
-Now every cell contains exactly one value.
-
-We have reached:
-
-```text
-1NF
-```
-
----
-
-# Step 2: Identify the Key
-
-Assume:
-
-```text
-(SaleID, GameTitle, Platform)
-```
-
-uniquely identifies a row.
-
-This is a composite key.
-
----
-
-Current table:
+Split every game-platform combination into its own row.
 
 | SaleID | CustomerName | CustomerPhone | GameTitle | Publisher | Platform |
 |---------|-------------|---------------|-----------|-----------|----------|
 | 1 | Alice | 555-1111 | Minecraft | Mojang | PC |
 | 1 | Alice | 555-1111 | Minecraft | Mojang | Xbox |
-| 2 | Bob | 555-2222 | Terraria | Re-Logic | PC |
+| 1 | Alice | 555-1111 | Terraria | Re-Logic | PC |
+| 2 | Bob | 555-2222 | Minecraft | Mojang | PC |
+
+Now every cell contains exactly one value.
+
+The table is in 1NF.
 
 ---
 
-# Step 3: Check for Partial Dependencies
+## Step 2: Identify Functional Dependencies
+
+Assume the primary key is:
+
+(SaleID, GameTitle, Platform)
+
+Dependencies:
+
+SaleID → CustomerName, CustomerPhone
+
+GameTitle → Publisher
 
 Notice:
 
-```text
-SaleID → CustomerName
-SaleID → CustomerPhone
-```
+- Customer information depends only on SaleID.
+- Publisher depends only on GameTitle.
 
-Customer information depends only on SaleID.
+These are partial dependencies.
 
-It does NOT depend on:
-
-```text
-(SaleID, GameTitle, Platform)
-```
-
-Similarly:
-
-```text
-GameTitle → Publisher
-```
-
-Publisher depends only on GameTitle.
+Therefore the table violates 2NF.
 
 ---
 
-These are:
+## Step 3: Convert to Second Normal Form (2NF)
 
-```text
-Partial Dependencies
-```
-
-which violate 2NF.
-
----
-
-# Step 4: Convert to Second Normal Form (2NF)
-
-Separate customer information:
-
-## Sales
+### Sales
 
 | SaleID | CustomerID |
 |---------|-----------|
 | 1 | 101 |
 | 2 | 102 |
 
----
-
-## Customers
+### Customers
 
 | CustomerID | CustomerName | CustomerPhone |
 |------------|-------------|---------------|
 | 101 | Alice | 555-1111 |
 | 102 | Bob | 555-2222 |
 
----
-
-## SaleGames
+### SaleGames
 
 | SaleID | GameTitle | Platform |
 |---------|-----------|----------|
 | 1 | Minecraft | PC |
 | 1 | Minecraft | Xbox |
-| 2 | Terraria | PC |
+| 1 | Terraria | PC |
+| 2 | Minecraft | PC |
 
----
-
-Still have:
-
-```text
-GameTitle → Publisher
-```
-
-which causes another problem.
-
----
-
-# Step 5: Check for Transitive Dependencies
-
-Current table:
+### Games
 
 | GameTitle | Publisher |
 |-----------|-----------|
 | Minecraft | Mojang |
 | Terraria | Re-Logic |
 
-Dependency:
+All partial dependencies have been removed.
 
-```text
+The database is now in 2NF.
+
+---
+
+## Step 4: Check for Transitive Dependencies
+
+Suppose we expand the Games table:
+
+| GameTitle | Publisher | Headquarters |
+|-----------|-----------|--------------|
+| Minecraft | Mojang | Sweden |
+| Terraria | Re-Logic | USA |
+
+Dependencies:
+
 GameTitle → Publisher
-```
 
-Suppose Publisher also stores:
-
-```text
 Publisher → Headquarters
-```
 
-Then:
+Therefore:
 
-```text
 GameTitle → Headquarters
-```
 
-through Publisher.
+This is a transitive dependency.
 
-This is a:
-
-```text
-Transitive Dependency
-```
-
-which violates 3NF.
+The database violates 3NF.
 
 ---
 
-# Step 6: Convert to Third Normal Form (3NF)
+## Step 5: Convert to Third Normal Form (3NF)
 
-Create a Publisher table.
-
----
-
-## Publishers
+### Publishers
 
 | PublisherID | PublisherName | Headquarters |
 |------------|---------------|--------------|
 | 1 | Mojang | Sweden |
 | 2 | Re-Logic | USA |
 
----
-
-## Games
+### Games
 
 | GameID | GameTitle | PublisherID |
 |---------|-----------|-------------|
 | 1 | Minecraft | 1 |
 | 2 | Terraria | 2 |
 
-Now:
+The transitive dependency has been removed.
 
-```text
-Game → Publisher
-Publisher → Headquarters
-```
-
-has been separated.
-
-No transitive dependency remains.
-
-We have reached:
-
-```text
-3NF
-```
+The database is now in 3NF.
 
 ---
 
-# Step 7: Check for Multivalued Dependencies
+## Step 6: Check for Multivalued Dependencies
 
-Suppose the store tracks:
+Suppose the company also tracks which platforms each game supports and which stores sell the game.
+
+### Game Availability
 
 | GameTitle | Platform | StoreLocation |
 |-----------|----------|--------------|
@@ -991,55 +985,29 @@ Suppose the store tracks:
 | Minecraft | PC | Boston |
 | Minecraft | Xbox | Boston |
 
-Notice:
+For Minecraft:
 
-```text
-GameTitle → Platform
-GameTitle → StoreLocation
-```
+Platforms = {PC, Xbox}
 
-Platforms and store locations are independent.
+StoreLocations = {NYC, Boston}
 
-The game can exist on many platforms.
+These sets are independent.
 
-The game can be sold in many stores.
+Multivalued dependencies:
 
-Neither determines the other.
+GameTitle ↠ Platform
 
----
+GameTitle ↠ StoreLocation
 
-This is a:
+The table stores every possible combination.
 
-```text
-Multivalued Dependency
-```
-
-which violates 4NF.
+This violates 4NF.
 
 ---
 
-# Why Is This Bad?
+## Step 7: Convert to Fourth Normal Form (4NF)
 
-The database creates every possible combination:
-
-```text
-Minecraft + PC + NYC
-Minecraft + Xbox + NYC
-Minecraft + PC + Boston
-Minecraft + Xbox + Boston
-```
-
-As more platforms and stores are added, the duplication explodes.
-
----
-
-# Step 8: Convert to Fourth Normal Form (4NF)
-
-Separate the independent relationships.
-
----
-
-## GamePlatforms
+### GamePlatforms
 
 | GameID | Platform |
 |---------|----------|
@@ -1047,9 +1015,7 @@ Separate the independent relationships.
 | 1 | Xbox |
 | 2 | PC |
 
----
-
-## GameStores
+### GameStores
 
 | GameID | StoreLocation |
 |---------|--------------|
@@ -1057,100 +1023,31 @@ Separate the independent relationships.
 | 1 | Boston |
 | 2 | Boston |
 
-Now:
+The independent relationships are stored separately.
 
-```text
-GameID → Platform
-```
+No redundant combinations remain.
 
-is stored independently from:
-
-```text
-GameID → StoreLocation
-```
-
-No unnecessary combinations exist.
-
-We have reached:
-
-```text
-4NF
-```
+The database is now in 4NF.
 
 ---
 
 # Final 4NF Schema
 
-## Customers
+Customers(CustomerID, CustomerName, CustomerPhone)
 
-| CustomerID | CustomerName | Phone |
-|------------|-------------|--------|
+Sales(SaleID, CustomerID)
 
----
+Publishers(PublisherID, PublisherName, Headquarters)
 
-## Sales
+Games(GameID, GameTitle, PublisherID)
 
-| SaleID | CustomerID |
-|---------|-----------|
+SaleGames(SaleID, GameID, Platform)
 
----
+GamePlatforms(GameID, Platform)
 
-## Publishers
+GameStores(GameID, StoreLocation)
 
-| PublisherID | PublisherName | Headquarters |
-|------------|---------------|--------------|
 
----
+Normalization Path:
 
-## Games
-
-| GameID | GameTitle | PublisherID |
-|---------|-----------|-------------|
-
----
-
-## SaleGames
-
-| SaleID | GameID |
-|---------|--------|
-
----
-
-## GamePlatforms
-
-| GameID | Platform |
-|---------|----------|
-
----
-
-## GameStores
-
-| GameID | StoreLocation |
-|---------|--------------|
-
----
-
-# What Each Normal Form Fixed
-
-| Step | Problem Removed |
-|--------|----------------|
-| 1NF | Non-atomic values |
-| 2NF | Partial dependencies |
-| 3NF | Transitive dependencies |
-| 4NF | Multivalued dependencies |
-
-This is the complete normalization path:
-
-```text
-UNF
- ↓
-1NF
- ↓
-2NF
- ↓
-3NF
- ↓
-4NF
-```
-
-where each step removes a specific type of dependency and produces a more organized database design.
+UNF → 1NF → 2NF → 3NF → 4NF

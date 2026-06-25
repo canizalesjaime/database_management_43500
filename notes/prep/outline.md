@@ -1,10 +1,10 @@
 ## Part 2 (Design a database for each)
-* er diagrams(* draw.io,erdplus,pgadmin erd,lucidchart.io)
+* er diagrams(draw.io,erdplus,pgadmin erd,lucidchart.io)
 
 ## Part 3
+* show how to connect database to frontend(include)
 * relational calculus
 * writing your own sql language
-* show how to connect database to frontend(include)
 
 
 
