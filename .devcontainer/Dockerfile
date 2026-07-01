@@ -9,7 +9,7 @@ RUN apt install build-essential -y
 RUN apt install -y python3
 RUN apt install python3-pip -y
 RUN apt-get update && apt-get install -y sudo curl
-RUN pip3 install beautifulsoup4 requests --break-system-packages
+RUN pip3 install fastapi uvicorn psycopg2-binary python-dotenv --break-system-packages
 Run apt install git -y
 
 # postgresql 

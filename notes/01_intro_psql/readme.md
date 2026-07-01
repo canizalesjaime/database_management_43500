@@ -36,7 +36,7 @@ psql commands in docker:
 
 
 # Getting Data for options 2 and 3
-* ```psql -U postgres```
+* ```psql -h localhost -U postgres```
 * ```CREATE DATABASE employees;```
 * ```\q```
 * Find data: [LINK](https://github.com/datacharmer/test_db)
