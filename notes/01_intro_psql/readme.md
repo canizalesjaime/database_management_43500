@@ -40,7 +40,7 @@ psql commands in docker:
 * ```CREATE DATABASE employees;```
 * ```\q```
 * Find data: [LINK](https://github.com/datacharmer/test_db)
-* modify line in pg_hba.conf ```local   all             postgres                                peer``` to ```local   all             postgres                                trust```
+* modify line in /etc/postgresql/\<version\>/main/pg_hba.conf ```local   all             postgres                                peer``` to ```local   all             postgres                                trust```
 * ```service postgresql restart```
 * ```cd test_db/postgresql``` (bash)
 * ```export PGUSER=postgres``` (bash)

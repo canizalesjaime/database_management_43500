@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+
+\section*{Project Description}
+
+Attached is a frontend project consisting of five buttons (or tabs). Each button corresponds to one of five database tables. When a button is selected, the corresponding table is displayed, showing 10 randomly selected rows.
+
+In addition, there are two additional buttons that allow the user to:
+\begin{itemize}
+    \item Add a random row to one of the tables.
+    \item Remove a random row from one of the tables.
+\end{itemize}
+
+The frontend is already configured to communicate with a backend file named \texttt{main.py}. If preferred, you may implement the backend using JavaScript; however, appropriate modifications to the frontend will be required to ensure compatibility.
+
+The Dockerfile in the github repository with the notes should cover your dependencies for this project. Alternatively, you can install the dependencies specified in notes 12 to complete the project.
+
+\section*{Requirements}
+
+You are required to implement a backend in Python consisting of two modules: \texttt{main.py} and \texttt{crud.py}.
+
+\subsection*{\texttt{main.py}}
+
+The \texttt{main.py} file should:
+
+\begin{itemize}
+    \item Serve as the entry point of the backend application.
+    \item Establish and expose API endpoints to the frontend.
+    \item Handle incoming requests for:
+    \begin{itemize}
+        \item Retrieving table data (limited to 10 randomly selected rows per request).
+        \item Triggering insertion of random rows.
+        \item Triggering deletion of random rows.
+    \end{itemize}
+    \item Delegate all database-related operations to functions defined in \texttt{crud.py}.
+\end{itemize}
+
+\subsection*{\texttt{crud.py}}
+
+The \texttt{crud.py} module should:
+
+\begin{itemize}
+    \item Manage all direct interactions with the database designed in Project 2.
+    \item Implement functions for:
+    \begin{itemize}
+        \item Querying tables and returning random subsets of rows.
+        \item Inserting randomly generated rows into tables.
+        \item Deleting randomly selected rows from tables.
+    \end{itemize}
+    \item Serve as the data access layer separating database logic from application logic.
+    \item You can extract columns like this:  \begin{verbatim}colnames =[desc[0] for desc in cur.description]\end{verbatim}
+    \item Hint: in order for your data to be properly displayed, after extracting columns and rows from table, combine them like this and return:\begin{verbatim}return [dict(zip(colnames, row)) for row in rows]\end{verbatim}
+\end{itemize}
+
+\subsection*{Frontend Table Naming Requirement}
+
+The frontend component (\texttt{App.jsx}) contains a constant array that defines the table names used to interact with the backend:
+
+\begin{verbatim}
+const TABLES = [...]
+\end{verbatim}
+
+\textbf{You are required to modify this array so that the table names exactly match the table names defined in your backend (\texttt{main.py}) and your database schema from Project 2.}
+
+Failure to ensure consistency between:
+\begin{itemize}
+    \item \texttt{App.jsx} table names
+    \item Backend table validation in \texttt{main.py}
+    \item Actual database table names
+\end{itemize}
+
+will result in failed API requests and incorrect or missing data display.
+
+\subsection*{Important Note}
+
+Ensure that all table identifiers are consistent across the entire stack:
+\begin{itemize}
+    \item Frontend (\texttt{App.jsx})
+    \item Backend (\texttt{main.py})
+    \item Database schema (Project 2)
+\end{itemize}
+
+
+
+\section*{Additional Requirements}
+
+You must also reuse the database migration script developed in Project 2 to ensure proper schema creation and data migration for integration with the frontend system.
+
+\end{document}
