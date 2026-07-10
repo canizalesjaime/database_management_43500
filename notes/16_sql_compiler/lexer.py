@@ -33,7 +33,6 @@ class Token:
 
 
 class Lexer:
-
     KEYWORDS = {
         "SELECT": TokenType.SELECT,
         "FROM": TokenType.FROM,
@@ -41,22 +40,24 @@ class Lexer:
     }
 
     def __init__(self, text):
-        self.text = text
-        self.pos = 0
+        self.text = text # thing we are reading 
+        self.pos = 0 # position in thing we are reading 
 
-    def peek(self):
+    def peek(self): # look at current character in position pos of text
         if self.pos >= len(self.text):
             return None
         return self.text[self.pos]
 
-    def advance(self):
+    def advance(self): # move pos up by one character
         self.pos += 1
 
-    def skip_whitespace(self):
+    def skip_whitespace(self): # skip whitespaces
         while self.peek() is not None and self.peek().isspace():
             self.advance()
 
-    def identifier(self):
+# find and set identifier(table, column name, etc) tokens, 
+# if not identifier this will set to SELECT, WHERE, OR FROM token
+    def identifier(self):  
         start = self.pos
 
         while (
@@ -75,7 +76,7 @@ class Lexer:
         return Token(TokenType.IDENTIFIER, word)
     
 
-    def number(self):
+    def number(self): #if first character is a digit, start scanning for a number
         start = self.pos
 
         while self.peek() is not None and self.peek().isdigit():
@@ -84,8 +85,9 @@ class Lexer:
         value = int(self.text[start:self.pos])
 
         return Token(TokenType.NUMBER, value)
+    
 
-    def string(self):
+    def string(self): #if first character is an opening quote, start scanning for string
         self.advance()  # Skip opening quote
 
         start = self.pos
@@ -101,8 +103,8 @@ class Lexer:
 
         return Token(TokenType.STRING, value)
 
-    def next_token(self):
 
+    def next_token(self): # scan for next token and call approriate method
         self.skip_whitespace()
 
         current = self.peek()
@@ -143,28 +145,30 @@ class Lexer:
 
 
     def tokenize(self):
-
         tokens = []
 
         while True:
-
             token = self.next_token()
-
             tokens.append(token)
-
             if token.type == TokenType.EOF:
                 break
 
         return tokens
 
 
-query = """
+query1 = """
 SELECT name
 FROM Users
 WHERE age > 18;
 """
 
-lexer = Lexer(query)
+# AND doesnt quite work
+query2 = """
+SELECT id, name, birth_name
+FROM Users
+WHERE age > 18 and id < 10000;
+"""
+lexer = Lexer(query2)
 
 tokens = lexer.tokenize()
 
