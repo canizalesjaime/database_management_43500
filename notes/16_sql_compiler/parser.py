@@ -1,7 +1,10 @@
+# parser checks the sentence(in this case query) follows a correct form
+# also part of syuntax checking
+
 from lexer import Lexer, TokenType
 
-
-class SelectStatement:
+# class that contains the whole query it seems to be the AST(abstract syntax tree)
+class SelectStatement: 
     def __init__(self, columns, table, where_clause):
         self.columns = columns
         self.table = table
@@ -16,7 +19,7 @@ class SelectStatement:
         )
 
 
-class Column:
+class Column: # a column, a set of these is included in SelectStatement
     def __init__(self, name):
         self.name = name
 
@@ -24,7 +27,7 @@ class Column:
         return f"Column({self.name})"
 
 
-class Table:
+class Table: # one of these in SelectStatement
     def __init__(self, name):
         self.name = name
 
@@ -32,7 +35,7 @@ class Table:
         return f"Table({self.name})"
 
 
-class Comparison:
+class Comparison: # one of these in SelectStatement, shows up as where_clause
     def __init__(self, left, operator, right):
         self.left = left
         self.operator = operator
@@ -48,33 +51,31 @@ class Comparison:
 
 
 class Parser:
-
-    def __init__(self, tokens):
+    # set of tokens, pos is what token we are currently parsing
+    def __init__(self, tokens): 
         self.tokens = tokens
         self.pos = 0
 
 
-    def peek(self):
+    def peek(self): # show current token
         return self.tokens[self.pos]
 
 
-    def advance(self):
+    def advance(self): # go to next token, but return past token
         token = self.peek()
         self.pos += 1
         return token
 
-
-    def consume(self, expected):
+    # check next token is correct datatype expected, then advance
+    def consume(self, expected): 
         token = self.peek()
         if token.type != expected:
-            raise Exception(
-                f"Expected {expected.name}, got {token.type.name}"
-            )
+            raise Exception(f"Expected {expected.name}, got {token.type.name}")
         return self.advance()
 
 
     def parse(self):
-        self.consume(TokenType.SELECT)
+        self.consume(TokenType.SELECT) # first token seen must always be SELECT
         columns = self.parse_select_list()
         self.consume(TokenType.FROM)
         table = self.parse_table()
@@ -138,18 +139,23 @@ class Parser:
         )
 
 
-query = """
-SELECT id, name
-FROM Users
-WHERE age > 18;
-"""
+def main():
+    query = """
+    SELECT id, name
+    FROM Users
+    WHERE age > 18;
+    """
 
-lexer = Lexer(query)
+    lexer = Lexer(query)
 
-tokens = lexer.tokenize()
+    tokens = lexer.tokenize()
 
-parser = Parser(tokens)
+    parser = Parser(tokens)
 
-ast = parser.parse()
+    ast = parser.parse()
 
-print(ast)
+    print(ast)
+
+
+if __name__=="__main__":
+    main()

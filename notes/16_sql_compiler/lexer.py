@@ -1,3 +1,6 @@
+# lexer is like a regular expression/finite state machine used to check part
+#  of syntax (checks correct words are being used)
+
 from enum import Enum, auto
 
 
@@ -155,22 +158,25 @@ class Lexer:
 
         return tokens
 
+def main():
+    query1 = """
+    SELECT name
+    FROM Users
+    WHERE age > 18;
+    """
 
-query1 = """
-SELECT name
-FROM Users
-WHERE age > 18;
-"""
+    # AND doesnt quite work
+    query2 = """
+    SELECT id, name, birth_name
+    FROM Users
+    WHERE age > 18 and id < 10000;
+    """
+    lexer = Lexer(query1)
 
-# AND doesnt quite work
-query2 = """
-SELECT id, name, birth_name
-FROM Users
-WHERE age > 18 and id < 10000;
-"""
-lexer = Lexer(query2)
+    tokens = lexer.tokenize()
 
-tokens = lexer.tokenize()
+    for token in tokens:
+        print(token)
 
-for token in tokens:
-    print(token)
+if __name__=="__main__":
+    main()
