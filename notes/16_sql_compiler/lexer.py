@@ -157,26 +157,3 @@ class Lexer:
                 break
 
         return tokens
-
-def main():
-    query1 = """
-    SELECT name
-    FROM Users
-    WHERE age > 18;
-    """
-
-    # AND doesnt quite work
-    query2 = """
-    SELECT id, name, birth_name
-    FROM Users
-    WHERE age > 18 and id < 10000;
-    """
-    lexer = Lexer(query1)
-
-    tokens = lexer.tokenize()
-
-    for token in tokens:
-        print(token)
-
-if __name__=="__main__":
-    main()
