@@ -15,7 +15,6 @@ class Expression(ASTNode):
 # =============================================================================
 
 class SelectStatement(Statement):
-
     def __init__(self, columns, table, where_clause):
         self.columns = columns
         self.table = table
@@ -36,7 +35,6 @@ class SelectStatement(Statement):
 
 # An identifier is simply a name.
 class Identifier(Expression):
-
     def __init__(self, name):
         self.name = name
 
@@ -45,7 +43,6 @@ class Identifier(Expression):
 
 # A literal is a value written directly into the program: 5, true, "hello", rvalues
 class Literal(Expression):
-
     def __init__(self, value):
         self.value = value
 
@@ -54,7 +51,6 @@ class Literal(Expression):
 
 
 class Column(ASTNode):
-
     def __init__(self, identifier):
         self.identifier = identifier
 
@@ -63,7 +59,6 @@ class Column(ASTNode):
 
 
 class Table(ASTNode):
-
     def __init__(self, identifier):
         self.identifier = identifier
 
@@ -76,7 +71,6 @@ class Table(ASTNode):
 # =============================================================================
 
 class BinaryExpression(Expression):
-
     def __init__(self, left, operator, right):
         self.left = left
         self.operator = operator

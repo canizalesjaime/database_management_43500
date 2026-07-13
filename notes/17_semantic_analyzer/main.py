@@ -23,12 +23,13 @@ def main():
     tokens = lexer.tokenize()
     parser = Parser(tokens)
     ast = parser.parse()
-
-    printer=ASTPrinter()
-    printer.visit(ast)
+    print(ast)
+    #printer=ASTPrinter()
+    #printer.visit(ast)
 
     analyzer = SemanticAnalyzer(catalog)
     analyzer.analyze(ast)
+    print("semantic analysis completed with no errors!")
 
 
 

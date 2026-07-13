@@ -33,7 +33,9 @@ class SemanticAnalyzer(ASTVisitor):
     def visit_Table(self, node):
         table_name = node.identifier.name
 
-        if table_name not in self.catalog:
+        # checks in catalog which is a python dictionary representing the 
+        # database passed to semantic analyzer
+        if table_name not in self.catalog: 
             raise SemanticError(f"Unknown table '{table_name}'.")
 
         self.current_table = table_name
