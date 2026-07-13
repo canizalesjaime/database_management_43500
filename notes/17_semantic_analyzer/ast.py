@@ -1,18 +1,18 @@
 class ASTNode:
     pass
 
-
+# A statement is a complete instruction that performs an action.
 class Statement(ASTNode):
     pass
 
-
+# An expression is something that produces a value.
 class Expression(ASTNode):
     pass
 
 
-# ============================================================
+# =============================================================================
 # Statement Nodes
-# ============================================================
+# =============================================================================
 
 class SelectStatement(Statement):
 
@@ -30,10 +30,11 @@ class SelectStatement(Statement):
         )
 
 
-# ============================================================
+# =============================================================================
 # Simple Nodes
-# ============================================================
+# =============================================================================
 
+# An identifier is simply a name.
 class Identifier(Expression):
 
     def __init__(self, name):
@@ -42,7 +43,7 @@ class Identifier(Expression):
     def __repr__(self):
         return f"Identifier({self.name})"
 
-
+# A literal is a value written directly into the program: 5, true, "hello", rvalues
 class Literal(Expression):
 
     def __init__(self, value):
@@ -70,9 +71,9 @@ class Table(ASTNode):
         return f"Table({self.identifier})"
 
 
-# ============================================================
+# =============================================================================
 # Expression Nodes
-# ============================================================
+# =============================================================================
 
 class BinaryExpression(Expression):
 

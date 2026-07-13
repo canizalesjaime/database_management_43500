@@ -38,10 +38,7 @@ class ASTVisitor:
         """
         Called if no visit_<NodeType>() method exists.
         """
-
-        raise NotImplementedError(
-            f"No visit method defined for {type(node).__name__}"
-        )
+        raise NotImplementedError(f"No visit method defined for {type(node).__name__}")
 
     # =========================================================
     # Default Traversal Methods
@@ -52,27 +49,21 @@ class ASTVisitor:
     # =========================================================
 
     def visit_SelectStatement(self, node):
-
         for column in node.columns:
             self.visit(column)
-
         self.visit(node.table)
 
         if node.where_clause is not None:
             self.visit(node.where_clause)
 
     def visit_Column(self, node):
-
         self.visit(node.identifier)
 
     def visit_Table(self, node):
-
         self.visit(node.identifier)
 
     def visit_BinaryExpression(self, node):
-
         self.visit(node.left)
-
         self.visit(node.right)
 
     def visit_Identifier(self, node):
@@ -99,33 +90,23 @@ class ASTPrinter(ASTVisitor):
     """
 
     def visit_SelectStatement(self, node):
-
         print("SelectStatement")
-
         super().visit_SelectStatement(node)
 
     def visit_Column(self, node):
-
         print("Column")
-
         super().visit_Column(node)
 
     def visit_Table(self, node):
-
         print("Table")
-
         super().visit_Table(node)
 
     def visit_BinaryExpression(self, node):
-
         print(f"BinaryExpression ({node.operator.name})")
-
         super().visit_BinaryExpression(node)
 
     def visit_Identifier(self, node):
-
-        print(f"Identifier: {node.name}")
+       print(f"Identifier: {node.name}")
 
     def visit_Literal(self, node):
-
         print(f"Literal: {node.value}")

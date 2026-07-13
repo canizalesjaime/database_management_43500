@@ -706,7 +706,7 @@ A visitor is simply an object that knows how to process every kind of AST node.
 Example
 
 ```
-SemanticAnalyzer
+SemanticAnalyzer:
 
 visit_SelectStatement()
 
