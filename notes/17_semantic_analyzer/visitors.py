@@ -1,5 +1,3 @@
-# visitor.py
-
 from ast import (
     ASTNode,
     Statement,
