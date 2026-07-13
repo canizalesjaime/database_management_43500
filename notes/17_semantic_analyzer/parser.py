@@ -2,7 +2,7 @@
 # the syntax of the entire statement(set of words)
 
 from lexer import TokenType
-from ast import (
+from ast_nodes import (
     SelectStatement,
     Column,
     Table,

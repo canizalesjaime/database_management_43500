@@ -1,4 +1,4 @@
-from ast import (
+from ast_nodes import (
     ASTNode,
     Statement,
     Expression,
@@ -9,7 +9,6 @@ from ast import (
     Literal,
     BinaryExpression,
 )
-
 
 class ASTVisitor:
     """
@@ -84,11 +83,6 @@ class ASTVisitor:
 # ============================================================
 
 class ASTPrinter(ASTVisitor):
-    """
-    Simple visitor that prints the order in which
-    nodes are visited.
-    """
-
     def visit_SelectStatement(self, node):
         print("SelectStatement")
         super().visit_SelectStatement(node)

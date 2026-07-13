@@ -1,9 +1,18 @@
 from lexer import Lexer
 from parser import Parser
-from visitors import ASTPrinter
+from visitor import ASTPrinter
+from semantic import SemanticAnalyzer
 
 
 def main():
+    catalog = {
+    "Users": {
+        "id": "INTEGER",
+        "name": "TEXT",
+        "age": "INTEGER",
+    }
+}
+
     query = """
     SELECT id, name
     FROM Users
@@ -14,8 +23,12 @@ def main():
     tokens = lexer.tokenize()
     parser = Parser(tokens)
     ast = parser.parse()
+
     printer=ASTPrinter()
     printer.visit(ast)
+
+    analyzer = SemanticAnalyzer(catalog)
+    analyzer.analyze(ast)
 
 
 
