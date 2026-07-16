@@ -4,16 +4,16 @@ from visitor import ASTPrinter
 from semantic import SemanticAnalyzer
 from algebra import AlgebraGenerator
 from rel_tree_printer import RelPrinter
-
+from optimizer import Optimizer
 
 def main():
     catalog = {
-    "Users": {
-        "id": "INTEGER",
-        "name": "TEXT",
-        "age": "INTEGER",
+        "Users": {
+            "id": "INTEGER",
+            "name": "TEXT",
+            "age": "INTEGER",
+        }
     }
-}
 
     query = """
     SELECT id, name
@@ -23,9 +23,11 @@ def main():
 
     lexer = Lexer(query)
     tokens = lexer.tokenize()
+    
     parser = Parser(tokens)
     ast = parser.parse()
-    print(ast)
+    #print(ast)
+    
     #printer=ASTPrinter()
     #printer.visit(ast)
 
@@ -35,8 +37,13 @@ def main():
 
     generator = AlgebraGenerator()
     tree = generator.visit(ast)
+
+    opty=Optimizer()
+    tree= opty.visit(tree)
+    
     printer = RelPrinter()
     printer.visit(tree)
+
 
 
 if __name__ == "__main__":
